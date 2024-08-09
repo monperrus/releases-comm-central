@@ -3053,6 +3053,11 @@ void nsImapProtocol::ProcessSelectedStateURL() {
               m_imapMessageSink->NotifyMessageDeleted(
                   canonicalName.get(), false, messageIdString.get());
             // notice we don't wait for this to finish...
+
+            // finally we expunge ithe option says so
+            // fix https://bugzilla.mozilla.org/show_bug.cgi?id=399475
+            if (gExpungeAfterDelete) Expunge();
+            
           } else
             HandleMemoryFailure();
         } break;
