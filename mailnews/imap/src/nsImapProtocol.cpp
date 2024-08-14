@@ -3054,8 +3054,7 @@ void nsImapProtocol::ProcessSelectedStateURL() {
                   canonicalName.get(), false, messageIdString.get());
             // notice we don't wait for this to finish...
 
-            // finally we expunge ithe option says so
-            // fix https://bugzilla.mozilla.org/show_bug.cgi?id=399475
+            // finally we expunge if the option says so
             if (gExpungeAfterDelete) Expunge();
             
           } else
@@ -3099,6 +3098,10 @@ void nsImapProtocol::ProcessSelectedStateURL() {
 
           ProcessStoreFlags(messageIdString, bMessageIdsAreUids, msgFlags,
                             true);
+
+          // if flags contains \Deleted and config expunge_after_delete set, expunge
+          if ((msgFlags & kImapMsgDeletedFlag) && gExpungeAfterDelete) Expunge();
+
         } break;
         case nsIImapUrl::nsImapSubtractMsgFlags: {
           nsCString messageIdString;
